@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hugo Martinez - Code. Precision. Presence.</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0055FF;
+            --secondary: #111827;
+            --accent: #22D3EE;
+            --neutral: #E5E7EB;
+            --white: #FFFFFF;
+            --dark: #0F1419;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--dark) 0%, var(--secondary) 100%);
+            color: var(--white);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Custom cursor */
+        body {
+            cursor: none;
+        }
+
+        .cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            background: var(--accent);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.15s ease;
+            box-shadow: 0 0 20px var(--accent);
+        }
+
+        .cursor.hover {
+            transform: scale(1.5);
+            background: var(--primary);
+        }
+
+        /* Grid system */
+        .grid-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-image: 
+                linear-gradient(rgba(34, 211, 238, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(34, 211, 238, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 2rem;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-menu a {
+            color: var(--neutral);
+            text-decoration: none;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: width 0.3s ease;
+        }
+
+        .nav-menu a:hover {
+            color: var(--accent);
+        }
+
+        .nav-menu a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        .hero-content {
+            text-align: center;
+            max-width: 800px;
+            padding: 0 2rem;
+        }
+
+        .hero-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: titleGlow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes titleGlow {
+            0% { filter: drop-shadow(0 0 20px rgba(0, 85, 255, 0.3)); }
+            100% { filter: drop-shadow(0 0 40px rgba(34, 211, 238, 0.5)); }
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--neutral);
+            font-weight: 300;
+        }
+
+        .hero-tagline {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--accent);
+            font-size: 1.1rem;
+            margin-bottom: 3rem;
+            opacity: 0.9;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            color: var(--white);
+            text-decoration: none;
+            border-radius: 50px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .cta-button:hover::before {
+            left: 100%;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 85, 255, 0.3);
+        }
+
+        /* Floating elements */
+        .floating-elements {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        .floating-element {
+            position: absolute;
+            background: var(--accent);
+            border-radius: 50%;
+            opacity: 0.1;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .floating-element:nth-child(1) {
+            width: 60px;
+            height: 60px;
+            top: 20%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .floating-element:nth-child(2) {
+            width: 40px;
+            height: 40px;
+            top: 60%;
+            right: 15%;
+            animation-delay: 2s;
+        }
+
+        .floating-element:nth-child(3) {
+            width: 80px;
+            height: 80px;
+            bottom: 20%;
+            left: 20%;
+            animation-delay: 4s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            33% { transform: translateY(-20px) rotate(120deg); }
+            66% { transform: translateY(10px) rotate(240deg); }
+        }
+
+        /* Sections */
+        .section {
+            min-height: 100vh;
+            padding: 5rem 2rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 3rem;
+            text-align: center;
+            color: var(--accent);
+        }
+
+        /* About Section */
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .about-text {
+            font-size: 1.2rem;
+            line-height: 1.8;
+        }
+
+        .about-text .highlight {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .skill-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid rgba(34, 211, 238, 0.2);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .skill-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent);
+            box-shadow: 0 10px 30px rgba(34, 211, 238, 0.2);
+        }
+
+        .skill-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        /* Projects Section */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+
+        .project-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(34, 211, 238, 0.2);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .project-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary);
+            box-shadow: 0 20px 40px rgba(0, 85, 255, 0.2);
+        }
+
+        .project-header {
+            padding: 2rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+        }
+
+        .project-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .project-tech {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .project-content {
+            padding: 2rem;
+        }
+
+        .project-description {
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .project-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .project-link {
+            padding: 0.5rem 1rem;
+            background: rgba(34, 211, 238, 0.1);
+            color: var(--accent);
+            text-decoration: none;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            border: 1px solid var(--accent);
+        }
+
+        .project-link:hover {
+            background: var(--accent);
+            color: var(--dark);
+        }
+
+        /* Contact Section */
+        .contact-content {
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .contact-text {
+            font-size: 1.3rem;
+            margin-bottom: 3rem;
+            line-height: 1.8;
+        }
+
+        .contact-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .contact-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 2rem;
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--white);
+            text-decoration: none;
+            border-radius: 50px;
+            border: 1px solid rgba(34, 211, 238, 0.3);
+            transition: all 0.3s ease;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 500;
+        }
+
+        .contact-link:hover {
+            background: var(--accent);
+            color: var(--dark);
+            transform: translateY(-2px);
+        }
+
+        /* Code animation */
+        .code-snippet {
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 8px;
+            padding: 1.5rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            margin: 2rem 0;
+            border-left: 4px solid var(--accent);
+            overflow-x: auto;
+        }
+
+        .code-line {
+            display: block;
+            margin: 0.5rem 0;
+        }
+
+        .keyword { color: var(--primary); }
+        .string { color: #22c55e; }
+        .comment { color: #6b7280; font-style: italic; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .about-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .contact-links {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .nav-menu {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+
+        /* Scroll animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <div class="cursor"></div>
+    <div class="grid-overlay"></div>
+
+    <nav>
+        <ul class="nav-menu">
+            <li><a href="#about">About</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <section class="hero">
+        <div class="floating-elements">
+            <div class="floating-element"></div>
+            <div class="floating-element"></div>
+            <div class="floating-element"></div>
+        </div>
+        <div class="hero-content">
+            <h1 class="hero-title">Hugo Martinez</h1>
+            <p class="hero-subtitle">Medical Software Innovator</p>
+            <p class="hero-tagline">// Code. Precision. Presence.</p>
+            <a href="#projects" class="cta-button">Explore My Work</a>
+        </div>
+    </section>
+
+    <section id="about" class="section">
+        <div class="container">
+            <h2 class="section-title fade-in">Where Mastery Meets Motion</h2>
+            <div class="about-grid">
+                <div class="about-text fade-in">
+                    <p>I craft the <span class="highlight">invisible elegance</span> behind medical innovation. As a precision engineer of frontend systems and Python architectures, I merge surgical accuracy with expressive design.</p>
+                    
+                    <p>My domain is the intersection of <span class="highlight">life-critical software</span> and user experience excellence. Every line of code serves a purpose: to save time, improve outcomes, and make complex medical workflows feel effortless.</p>
+
+                    <div class="code-snippet">
+                        <span class="code-line"><span class="keyword">class</span> <span class="string">MedicalInnovator</span>:</span>
+                        <span class="code-line">    <span class="keyword">def</span> <span class="string">__init__</span>(self):</span>
+                        <span class="code-line">        self.precision = <span class="string">"surgical"</span></span>
+                        <span class="code-line">        self.creativity = <span class="string">"boundless"</span></span>
+                        <span class="code-line">        self.impact = <span class="string">"life_changing"</span></span>
+                        <span class="code-line">        <span class="comment"># Where technology meets humanity</span></span>
+                    </div>
+                </div>
+                <div class="fade-in">
+                    <div class="skills-grid">
+                        <div class="skill-card">
+                            <h3 class="skill-title">Frontend Mastery</h3>
+                            <p>React, TypeScript, CSS Architecture. Building interfaces that medical professionals trust with lives.</p>
+                        </div>
+                        <div class="skill-card">
+                            <h3 class="skill-title">Python Excellence</h3>
+                            <p>FastAPI, Pydantic, Django. Backend systems that process critical data with zero tolerance for error.</p>
+                        </div>
+                        <div class="skill-card">
+                            <h3 class="skill-title">Medical Context</h3>
+                            <p>HIPAA compliance, clinical workflows, real-time monitoring. Technology that understands healthcare.</p>
+                        </div>
+                        <div class="skill-card">
+                            <h3 class="skill-title">Design Systems</h3>
+                            <p>Component libraries, design tokens, accessibility. Consistency that scales across medical applications.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="projects" class="section">
+        <div class="container">
+            <h2 class="section-title fade-in">Precision in Motion</h2>
+            <div class="projects-grid">
+                <div class="project-card fade-in">
+                    <div class="project-header">
+                        <h3 class="project-title">Neural Pathway Visualizer</h3>
+                        <p class="project-tech">React • Three.js • Python • FastAPI</p>
+                    </div>
+                    <div class="project-content">
+                        <p class="project-description">
+                            Real-time 3D visualization of neural pathways for surgical planning. Surgeons can explore brain structure with sub-millimeter precision, reducing operation time by 40%.
+                        </p>
+                        <div class="project-links">
+                            <a href="#" class="project-link">Live Demo</a>
+                            <a href="#" class="project-link">Case Study</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-card fade-in">
+                    <div class="project-header">
+                        <h3 class="project-title">ICU Monitor Dashboard</h3>
+                        <p class="project-tech">TypeScript • WebSocket • Pydantic • Redis</p>
+                    </div>
+                    <div class="project-content">
+                        <p class="project-description">
+                            Critical care monitoring system processing 10,000+ data points per second. Smart alerts reduce false positives by 85% while ensuring zero missed critical events.
+                        </p>
+                        <div class="project-links">
+                            <a href="#" class="project-link">Architecture</a>
+                            <a href="#" class="project-link">Performance</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-card fade-in">
+                    <div class="project-header">
+                        <h3 class="project-title">Drug Interaction Engine</h3>
+                        <p class="project-tech">Python • Machine Learning • GraphQL • React</p>
+                    </div>
+                    <div class="project-content">
+                        <p class="project-description">
+                            AI-powered system detecting dangerous drug interactions before prescription. Deployed across 200+ hospitals, preventing an estimated 15,000 adverse events annually.
+                        </p>
+                        <div class="project-links">
+                            <a href="#" class="project-link">Impact Report</a>
+                            <a href="#" class="project-link">Technical Deep Dive</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-card fade-in">
+                    <div class="project-header">
+                        <h3 class="project-title">Surgical Planning Suite</h3>
+                        <p class="project-tech">Next.js • WebGL • Django • PostgreSQL</p>
+                    </div>
+                    <div class="project-content">
+                        <p class="project-description">
+                            Comprehensive pre-operative planning platform. Combines medical imaging, 3D modeling, and collaborative tools. Used by top cardiac surgery teams worldwide.
+                        </p>
+                        <div class="project-links">
+                            <a href="#" class="project-link">Product Tour</a>
+                            <a href="#" class="project-link">Testimonials</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="section">
+        <div class="container">
+            <div class="contact-content">
+                <h2 class="section-title fade-in">Let's Build the Future</h2>
+                <p class="contact-text fade-in">
+                    Ready to elevate your medical software? Whether you need precision engineering, creative problem-solving, or technical leadership, I bring the mastery to make it happen.
+                </p>
+                <div class="contact-links fade-in">
+                    <a href="mailto:hugo@example.com" class="contact-link">
+                        📧 Email
+                    </a>
+                    <a href="https://linkedin.com/in/hugo-martinez" class="contact-link">
+                        💼 LinkedIn
+                    </a>
+                    <a href="https://github.com/hugomartinez" class="contact-link">
+                        🔧 GitHub
+                    </a>
+                    <a href="#" class="contact-link">
+                        📄 Resume
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Custom cursor
+        const cursor = document.querySelector('.cursor');
+        const links = document.querySelectorAll('a, button, .skill-card, .project-card');
+
+        document.addEventListener('mousemove', e => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+
+        links.forEach(link => {
+            link.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+            link.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+        });
+
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Parallax effect for floating elements
+        document.addEventListener('mousemove', (e) => {
+            const elements = document.querySelectorAll('.floating-element');
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+
+            elements.forEach((element, index) => {
+                const speed = (index + 1) * 0.5;
+                const xMove = (x - 0.5) * speed * 50;
+                const yMove = (y - 0.5) * speed * 50;
+                
+                element.style.transform = `translate(${xMove}px, ${yMove}px)`;
+            });
+        });
+
+        // Dynamic title effect
+        const title = document.querySelector('.hero-title');
+        const text = 'Hugo Martinez';
+        title.innerHTML = '';
+
+        text.split('').forEach((char, index) => {
+            const span = document.createElement('span');
+            span.textContent = char;
+            span.style.animationDelay = `${index * 0.1}s`;
+            span.style.animation = 'fadeInUp 0.6s ease forwards';
+            title.appendChild(span);
+        });
+
+        // Add fadeInUp animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(30px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
